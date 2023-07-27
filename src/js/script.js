@@ -6,7 +6,10 @@ const select = {
     },
     listOf: {
         books: '.books-list',
-        images: '.book__image',
+        images: 'book__image',
+    },
+    atributes: {
+        dataId: 'data-id',
     },
     class: {
         favorite: 'favorite',
@@ -32,19 +35,26 @@ function render(listOfBooks) {
 
 
 function initActions() {
-  const booksImagesList = document.querySelectorAll(select.listOf.images);
+  const booksList = document.querySelector(select.listOf.books);
 
-  for (let singleBookImage of booksImagesList) {
-    singleBookImage.addEventListener('dblclick', function(event){
-      event.preventDefault();
-      singleBookImage.classList.toggle(select.class.favorite);
-      const bookId = singleBookImage.getAttribute('data-id');
+  booksList.addEventListener('dblclick', function(event){
+    event.preventDefault();
 
-      if (!favouriteBooks.includes(bookId)) {
+    const clickedBook = event.target.offsetParent;
+
+    if (clickedBook.classList.contains(select.listOf.images)) {
+
+    const bookId = clickedBook.getAttribute(select.atributes.dataId);
+
+      if (favouriteBooks.includes(bookId)) {
+        clickedBook.classList.remove(select.class.favorite);
+        favouriteBooks.pop(bookId);
+      } else {
+        clickedBook.classList.add(select.class.favorite);
         favouriteBooks.push(bookId);
       }
-    });
-  }
+    }
+  });
 }
 
 render(dataSource.books);
