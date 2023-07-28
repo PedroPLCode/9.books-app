@@ -7,6 +7,7 @@ const select = {
     listOf: {
         books: '.books-list',
         images: 'book__image',
+        ratings: '.book__rating__fill',
     },
     atributes: {
         dataId: 'data-id',
@@ -31,9 +32,15 @@ function render(listOfBooks) {
   const booksListElement = document.querySelector(select.listOf.books);
 
   for (let singleBook of listOfBooks) {
+    const ratingBgc = determineRatingBgc(singleBook.rating);
+    const ratingWidth = determineRatingWidth(singleBook.rating);
     const HTMLelement = templates.booksList(singleBook);
     const DOMelement = utils.createDOMFromHTML(HTMLelement);
     booksListElement.appendChild(DOMelement);
+
+    const ratingFill = DOMelement.querySelector(select.listOf.ratings);
+    ratingFill.style.width = ratingWidth;
+    ratingFill.style.background = ratingBgc;
   }
 }
 
@@ -93,13 +100,31 @@ function filterBooks() {
      }
     }
 
-    const bookToHide = document.querySelector('.book__image[data-id="' + singleBook.id + '"]'); 
+    const bookToHide = document.querySelector('.' + select.listOf.images + '[' + select.atributes.dataId + '="' + singleBook.id + '"]'); 
     if (shouldBeHidden) {
       bookToHide.classList.add(select.class.hidden); 
     } else {
       bookToHide.classList.remove(select.class.hidden); 
     }
   }
+}
+
+
+function determineRatingBgc(rating) {
+  if (rating < 6) {
+    return 'linear-gradient(to bottom, #fefcea 0%, #f1da36 100%)';
+  } else if (rating < 8) {
+    return 'linear-gradient(to bottom, #b4df5b 0%,#b4df5b 100%)';
+  } else if (rating < 9) {
+    return 'linear-gradient(to bottom, #299a0b 0%, #299a0b 100%)';
+  } else {
+    return 'linear-gradient(to bottom, #ff0084 0%,#ff0084 100%)';
+  }
+}
+
+
+function determineRatingWidth(rating) {
+  return (rating * 10 + '%');
 }
 
 render(dataSource.books);
